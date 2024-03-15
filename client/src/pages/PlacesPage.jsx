@@ -3,6 +3,9 @@ import { Link,useParams } from "react-router-dom";
 import Perks from "../Perks.jsx";
 import axios from "axios";
 import { data } from "autoprefixer";
+import PhotosUploader from "../PhotosUploader.jsx";
+import { Navigate } from "react-router-dom";
+import React from "react";
 
 
 export default function PlacesPage(){
@@ -10,13 +13,14 @@ export default function PlacesPage(){
     const [title,setTitle]= useState('');
     const[address,setAddress]= useState('');
    const[addedPhotos,setAddedPhotos]= useState([]);
-   const[photolink,SetPhotoLink] = useState('');
+//   const[photolink,SetPhotoLink] = useState('');
    const[description,setDescription] = useState('');
    const[perks,setPerks] = useState([]);
    const[extraInfo,setExtraInfo]= useState('');
    const[checkIn,setCheckIn]=useState('');
    const[checkOut,setCheckout] =useState(''); 
    const[MaxGuests,setMaxGuests]=useState('');
+   const [redirect,setRedirect]=useState();
    function inputHeader(text)
    
    {
@@ -38,34 +42,23 @@ function preInput(header,description){
 </>
     );
 }
-async function addPhotoByLink(ev){
-    ev.preventDefault();
-   const {data:filename}=await axios.post('/upload-by-link', {link:photolink});
-   setAddedPhotos(prev => {
-    return [...prev,filename];
-   });
-   SetPhotoLink('');
-}
-function uploadphoto(ev){
-const files = ev.target.files;
-const data = new FormData();
-for(let i=0; i <files.length; i++){
-    data.append('photos',files[i]);
-}
-    
-    
 
-axios.post('/upload',data,{
-    headers:{'content-type':'multipar/form-data'}
-}).then(response =>{
-    const {data:filenames} =response;
-    setAddedPhotos(prev => {
-        return [...prev,filenames];
-       });
-})
+async function addNewPlace(ev){
+    ev.preventDefault();
+    
+   const {data} = await axios.post('/places', {title,address,addedPhotos,perks,extraInfo,checkIn,checkOut,MaxGuests
+   });
+ setRedirect('/account/places');
+
+}
+if (redirect){
+    console.log("inside redirect")
+    console.log(redirect)
+    return <Navigate to={redirect} />
 }
     return(
         <div>
+        
             {action !== 'new' && (
             <div className="text-center">
         <Link className= 'inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full'to={'/account/places/new'}>
@@ -78,43 +71,19 @@ axios.post('/upload',data,{
             )}
             {action === 'new' && (
                 <div>
-                    <form >
+                    <form onSubmit={addNewPlace}>
                         {preInput('Title', 'Title for your place.Should be short and catchy as in advertisement')}
                         <input type="text" value={title} onChange={ ev => setTitle(ev.target.value)} placeholder="title,for exampl: My lovely apt"/> 
-                        <h2 className="text-2xl mt-4">Title</h2>
+                        
                         
                        {preInput('Addresss', 'Address to your place')}
                        <input type="text" value={address} onChange={ ev => setAddress(ev.target.value)}placeholder="address"/>
-                       <h2 className="text-2xl mt-4">Address</h2>
+                       
                        
                        {preInput('Photos','more=better')}
-                       <h2 className="text-2xl mt-4">photos</h2>
+                      
+                       <PhotosUploader addedPhotos={addedPhotos} onChange={setAddedPhotos}/>
                        
-                       <div className="flex gap-2 ">
-                        <input value={photolink} onChange={ ev => SetPhotoLink(ev.target.value)} type="text" placeholder={'Add using a link....jpg'} />
-                        <button onClick={addPhotoByLink} className="bg-gray-200 px-4 rounded-2xl">Add&nbsp; photo</button>
-                       </div>
-                        
-                       <div className=" mt-2 grid gap-2 grid-cols-3md :grid-cols-4 lg:grid-cols-6">
-                       {addedPhotos.length > 0 && addedPhotos.map(link => (
-
-                        <div>
-                            <img className="rounded-2xl" src={'http://localhost:4000/uploads/'+link} alt="aa" />
-                        </div>
-                
-                       ))}
-
-                        
-                       <label className="cursor-pointer flex items-center gap-1 justify-center border bg-transparent rounded-2xl p-2 text-2xl text-gray-600">
-                       <input type="file" multiple className="hidden" onChange={uploadphoto}/>
-                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
-</svg>
-
-                        
-                        Upload 
-                       </label>
-                       </div>
                        {preInput('Description','Description of the place')}
                        
                        
