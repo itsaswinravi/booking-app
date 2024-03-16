@@ -137,7 +137,7 @@ app.post('/places',  (req,res) =>{
        
    
     const placeDoc=await Place.create({
-    owner:userData. index.id,
+    owner:userData.id,
     title,address,addedphotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests
 });
