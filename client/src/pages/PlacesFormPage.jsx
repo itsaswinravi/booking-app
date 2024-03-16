@@ -1,11 +1,13 @@
 import PhotosUploader from "../PhotosUploader"
 import Perks from "../Perks"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountNav from "../AccountNav";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import React from "react";
 export default function PLacesFormPages(){
+    const {id} =useParams();
+  
     const [title,setTitle]= useState('');
     const[address,setAddress]= useState('');
    const[addedPhotos,setAddedPhotos]= useState([]);
@@ -17,6 +19,25 @@ export default function PLacesFormPages(){
    const[checkOut,setCheckout] =useState(''); 
    const[MaxGuests,setMaxGuests]=useState(1);
    const [redirect,setRedirect]=useState(false);
+   useEffect(() =>{
+if(!id){
+    return;
+}
+axios.get('/places/'+id)
+.then(response =>{
+const {data} = response;
+setTitle(data.title);
+setAddress(data.address);
+setAddedPhotos(data.photos);
+setDescription(data.description);
+setPerks(data.perks);
+setExtraInfo(data.setExtraInfo);
+setCheckIn(data.checkIn);
+setCheckout(data.setCheckout);
+setMaxGuests(data.setMaxGuests);
+
+});
+   },[id]);
    function inputHeader(text)
    
    {
@@ -39,12 +60,22 @@ function preInput(header,description){
     );
 }
 
-async function addNewPlace(ev){
+async function savePlace(ev){
     ev.preventDefault();
-    
-await axios.post('/places', {title,address,addedPhotos,perks,extraInfo,checkIn,checkOut,MaxGuests
-   });
- setRedirect(true);
+    const placeData = {title,address,addedPhotos,description,perks,extraInfo,checkIn,checkOut,MaxGuests};
+    if(id){
+         //update
+         await axios.put('/places', {
+            id,
+            ...placeData
+         });
+       setRedirect(true);
+    } else{
+        //new place
+        await axios.post('/places',placeData);
+        setRedirect(true)
+    }    
+
 
 }
 if(redirect) {
@@ -54,7 +85,7 @@ if(redirect) {
         <div>
                <AccountNav />
 
-                    <form onSubmit={addNewPlace}>
+                    <form onSubmit={savePlace}>
                         {preInput('Title', 'Title for your place.Should be short and catchy as in advertisement')}
                         <input type="text" value={title} onChange={ ev => setTitle(ev.target.value)} placeholder="title,for exampl: My lovely apt"/> 
                         

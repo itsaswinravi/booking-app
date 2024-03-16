@@ -16,7 +16,7 @@ import PlacesPage from './pages/PlacesPage';
 import PLacesFormPage from './pages/PlacesFormPage';
 
 
-axios.defaults.baseURL='http://127.0.0.1:4000';
+axios.defaults.baseURL='http://localhost:4000';
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -32,6 +32,9 @@ function App() {
       <Route path="/account" element={<ProfilePage />}/>
       <Route path="/account/Places" element={<PlacesPage />}/>
       <Route path="/account/Places/new" element={<PLacesFormPage />}/>
+      <Route path="/account/Places/:id" element={<PLacesFormPage />}/>
+      
+      
       </Route>
       
     </Routes>
