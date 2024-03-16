@@ -59,8 +59,9 @@ res.json({userDoc});
 });
 app.post('/login', async (req,res) => {
    const{email,password} = req.body;
+   try{
    const userDoc= await User.findOne({email});
-   console.log("ggggg",userDoc)
+   
 
    if(userDoc){
     const passOk = bcrypt.compareSync(password, userDoc.password)
@@ -81,12 +82,15 @@ app.post('/login', async (req,res) => {
    } else{
     res.status(404).json('not found');
    }
-})
+}catch (err){
+    resizeBy.status(500).json(err);
+}});
+
 
 app.get('/profile', (req,res) =>{
     const {token} = req.cookies;
 if (token){
-   jwt.verify(token, jwtSecret,  {} , async(err, userData) => {
+   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if(err) throw err;
     const { name,email,_id}=await User.findById(userData.id);
     res.json({name,email,_id});
@@ -112,12 +116,12 @@ await imageDownloader.image({
 res.json(newName);
 });
 
-const photosMiddlewear = multer({dest:'uploads/'});
+const photosMiddleware = multer({dest:'uploads/'});
 
-app.post('/upload', photosMiddlewear.array('photos',100),(req,res) => {
+app.post('/upload', photosMiddleware.array('photos',100),(req,res) => {
     console.log(req.files);
     const uploadedFiles =[];
-    for (let i=0; i <req.files.length; i++){
+    for (let i=0; i < req.files.length; i++){
         const{path,originalname} = req.files[i];
         const parts = originalname.split(',');
         const ext = parts[parts.length -1];
@@ -132,7 +136,7 @@ app.post('/places',  (req,res) =>{
     const {token} = req.cookies;
     const {title,address,addedphotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests} = req.body;
-    jwt.verify(token, jwtSecret,  {} , async(err, userData) => {
+    jwt.verify(token, jwtSecret, {},async (err, userData) => {
         if(err) throw err;
        
    

@@ -4,11 +4,12 @@ import { useState } from "react";
 import AccountNav from "../AccountNav";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import React from "react";
 export default function PLacesFormPages(){
     const [title,setTitle]= useState('');
     const[address,setAddress]= useState('');
    const[addedPhotos,setAddedPhotos]= useState([]);
-  const[photolink,SetPhotoLink] = useState('');
+  
    const[description,setDescription] = useState('');
    const[perks,setPerks] = useState([]);
    const[extraInfo,setExtraInfo]= useState('');
