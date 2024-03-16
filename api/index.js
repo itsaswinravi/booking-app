@@ -64,7 +64,7 @@ app.post('/login', async (req,res) => {
    
 
    if(userDoc){
-    const passOk = bcrypt.compareSync(password, userDoc.password)
+    const passOk = bcrypt.compareSync(password, userDoc.password);
     if(passOk){
            jwt.sign({
             email:userDoc.email , 
@@ -83,7 +83,7 @@ app.post('/login', async (req,res) => {
     res.status(404).json('not found');
    }
 }catch (err){
-    resizeBy.status(500).json(err);
+    res.status(500).json(err);
 }});
 
 
@@ -133,7 +133,10 @@ app.post('/upload', photosMiddleware.array('photos',100),(req,res) => {
    res.json(uploadedFiles); 
 });
 app.post('/places',  (req,res) =>{
+    console.log("abc")
+    console.log(req.cookies)
     const {token} = req.cookies;
+    console.log(token)
     const {title,address,addedphotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
@@ -142,11 +145,19 @@ app.post('/places',  (req,res) =>{
    
     const placeDoc=await Place.create({
     owner:userData.id,
-    title,address,addedphotos,description,perks,extraInfo,checkIn
+    title,address,photos:addedphotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests
 });
 res.json(placeDoc);
 });
+});
+app.get('/places', (req,res) =>{
+    const {token} = req.cookies;
+    console.log(req.cookies)
+    jwt.verify(token, jwtSecret, {},async (err, userData) => {
+const {id} = userData;
+res.json(await Place.find({owner:id}));
+    });
 });
 app.listen(4000);
 
