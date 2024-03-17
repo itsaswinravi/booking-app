@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import IndexPage from './pages/IndexPage.jsx';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import PlacePage from './pages/PlacePage';
 
 import Layout from './Layout';
 import axios from 'axios';
@@ -33,6 +34,7 @@ function App() {
       <Route path="/account/Places" element={<PlacesPage />}/>
       <Route path="/account/Places/new" element={<PLacesFormPage />}/>
       <Route path="/account/Places/:id" element={<PLacesFormPage />}/>
+      <Route path="/Place/:id" element={<PlacePage />}/>
       
       
       </Route>

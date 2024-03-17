@@ -14,6 +14,7 @@ const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer =require('multer');
 const fs =require('fs');
+
 // const [redirect,setRedirect] =useState('');
 
 
@@ -138,15 +139,15 @@ app.post('/places',  (req,res) =>{
     const {token} = req.cookies;
     console.log(token)
     const {title,address,addedPhotos,description,perks,extraInfo,checkIn
-    ,checkOUt,maxGuests} = req.body;
+    ,checkOUt,maxGuests,price} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
         if(err) throw err;
        
    
     const placeDoc=await Place.create({
-    owner:userData.id,
+    owner:userData.id,price,
     title,address,photos:addedPhotos,description,perks,extraInfo,checkIn
-    ,checkOUt,maxGuests
+    ,checkOUt,maxGuests,
 });
 res.json(placeDoc);
 });
@@ -168,7 +169,7 @@ app.put('/places/',async(req,res) =>{
     const {token} = req.cookies;
     console.log(token)
     const {id,title,address,addedPhotos,description,perks,extraInfo,checkIn
-    ,checkOUt,maxGuests} = req.body;
+    ,checkOUt,maxGuests,price,} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
         if(err) throw err;
     const placeDoc = await Place.findById(id);
@@ -176,7 +177,7 @@ app.put('/places/',async(req,res) =>{
           placeDoc.set({
            
             title,address,photos:addedPhotos,description,perks,extraInfo,checkIn
-            ,checkOUt,maxGuests
+            ,checkOUt,maxGuests,price,
         
 
           })  ;
