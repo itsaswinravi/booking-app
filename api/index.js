@@ -167,7 +167,7 @@ app.put('/places/',async(req,res) =>{
     
     const {token} = req.cookies;
     console.log(token)
-    const {id,title,address,addedphotos,description,perks,extraInfo,checkIn
+    const {id,title,address,addedPhotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
         if(err) throw err;
@@ -175,7 +175,7 @@ app.put('/places/',async(req,res) =>{
         if(userData.id ===placeDoc.owner.toString() ){
           placeDoc.set({
            
-            title,address,photos:addedphotos,description,perks,extraInfo,checkIn
+            title,address,photos:addedPhotos,description,perks,extraInfo,checkIn
             ,checkOUt,maxGuests
         
 
