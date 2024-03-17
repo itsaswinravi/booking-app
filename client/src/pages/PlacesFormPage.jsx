@@ -1,10 +1,10 @@
 import PhotosUploader from "../PhotosUploader"
-import Perks from "../Perks"
+import Perks from "../Perks.jsx"
 import { useEffect, useState } from "react";
 import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
-import React from "react";
+
 export default function PLacesFormPages(){
     const {id} =useParams();
   
@@ -31,10 +31,10 @@ setAddress(data.address);
 setAddedPhotos(data.photos);
 setDescription(data.description);
 setPerks(data.perks);
-setExtraInfo(data.setExtraInfo);
+setExtraInfo(data.extraInfo);
 setCheckIn(data.checkIn);
-setCheckout(data.setCheckout);
-setMaxGuests(data.setMaxGuests);
+setCheckout(data.checkout);
+setMaxGuests(data.MaxGuests);
 
 });
    },[id]);
@@ -79,13 +79,13 @@ async function savePlace(ev){
 
 }
 if(redirect) {
-    return <Navigate to= {'/account/places'}/>
+    return <Navigate to= {'/account/places'}/>;
 }
     return(
         <div>
                <AccountNav />
 
-                    <form onSubmit={savePlace}>
+                    <form onSubmit={savePlace }>
                         {preInput('Title', 'Title for your place.Should be short and catchy as in advertisement')}
                         <input type="text" value={title} onChange={ ev => setTitle(ev.target.value)} placeholder="title,for exampl: My lovely apt"/> 
                         
@@ -103,11 +103,12 @@ if(redirect) {
                        
                        <textarea value={description} onChange={ ev => setDescription(ev.target.value)} />
                        {preInput('Perks','Select all the perks of your place')}
-                       <h2 className="text-2xl mt-4">Perks</h2>
+                       {/* /* <h2 className="text-2xl mt-4">Perks</h2> */ }
                       
-                      
-                        <div  className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3  lg:grid-cols-6">
+                      <div>
+                        <div  className="grid gap-2 mt-2 grid-cols-2 md:grid-cols-3  lg:grid-cols-6">
                             <Perks selected={perks} onChange={setPerks} />
+                            </div>
                         </div>
                        
                        {preInput('Extra info','house rules,etc')}
@@ -120,8 +121,8 @@ if(redirect) {
                        
                        <div className="grid gap-2 sm:grid-cols-3">
                         <div>
-                            <h3 >Check in time</h3>
-                        <input type="text"value={checkIn} onChange={ ev => setCheckIn(ev.target.value)} placeholder="14:" />
+                            <h3 className="mt-2 -mb-1">Check in time</h3>
+                        <input type="text"value={checkIn} onChange={ ev => setCheckIn(ev.target.value)} placeholder="14" />
                         </div>
                         <div>
                         <h3 className="mt-2 -mb-1">Check out time</h3>
@@ -138,5 +139,5 @@ if(redirect) {
                     
                     </form>
                 </div>
-    )
+    );
 }
