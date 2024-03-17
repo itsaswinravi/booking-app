@@ -137,7 +137,7 @@ app.post('/places',  (req,res) =>{
     console.log(req.cookies)
     const {token} = req.cookies;
     console.log(token)
-    const {title,address,addedphotos,description,perks,extraInfo,checkIn
+    const {title,address,addedPhotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
         if(err) throw err;
@@ -145,7 +145,7 @@ app.post('/places',  (req,res) =>{
    
     const placeDoc=await Place.create({
     owner:userData.id,
-    title,address,photos:addedphotos,description,perks,extraInfo,checkIn
+    title,address,photos:addedPhotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests
 });
 res.json(placeDoc);
