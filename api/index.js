@@ -109,7 +109,7 @@ app.post('/logout', (req,res) =>{
 app.post('/upload-by-link', async(req,res) =>{
 const {link} = req.body;
 const newName= 'photo' +Date.now() + '.jpg';
-console.log(link)
+// console.log(link)
 await imageDownloader.image({
     url:link,
     dest:__dirname +'/uploads/' +newName,
@@ -120,7 +120,7 @@ res.json(newName);
 const photosMiddleware = multer({dest:'uploads/'});
 
 app.post('/upload', photosMiddleware.array('photos',100),(req,res) => {
-    console.log(req.files);
+    // console.log(req.files);
     const uploadedFiles =[];
     for (let i=0; i < req.files.length; i++){
         const{path,originalname} = req.files[i];
@@ -130,14 +130,14 @@ app.post('/upload', photosMiddleware.array('photos',100),(req,res) => {
         fs.renameSync(path, newPath);
         uploadedFiles.push(newPath.replace('uploads\\',''));
     }
-    console.log(uploadedFiles)
+    // console.log(uploadedFiles)
    res.json(uploadedFiles); 
 });
 app.post('/places',  (req,res) =>{
-    console.log("abc")
-    console.log(req.cookies)
+    // console.log("abc")
+    // console.log(req.cookies)
     const {token} = req.cookies;
-    console.log(token)
+    // console.log(token)
     const {title,address,addedPhotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests,price} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
@@ -154,20 +154,21 @@ res.json(placeDoc);
 });
 app.get('/user-places', (req,res) =>{
     const {token} = req.cookies;
-    console.log(req.cookies)
+    // console.log(req.cookies)
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
 const {id} = userData;
 res.json(await Place.find({owner:id}));
     });
 });
 app.get('/places/:id',async (req,res) =>{
+    console.log("sbsbbs");
 const {id} =req.params;
 res.json(await Place.findById (id));
 });
-app.put('/places/',async(req,res) =>{
+app.put('/places',async(req,res) =>{
     
     const {token} = req.cookies;
-    console.log(token)
+    // console.log(token)
     const {id,title,address,addedPhotos,description,perks,extraInfo,checkIn
     ,checkOUt,maxGuests,price,} = req.body;
     jwt.verify(token, jwtSecret, {},async (err, userData) => {
