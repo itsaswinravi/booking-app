@@ -30,6 +30,7 @@ app.use(cors({
     credentials:true,
     origin:'http://localhost:5173',
 })) ;
+// cors is used for cross origin resource sharing, it allows us to send http requests from one domain to another domain.
 
 console.log(process.env.MONGO_URL)
 mongoose.connect(process.env.MONGO_URL);
@@ -53,7 +54,7 @@ app.get('/test',(req,res) =>{
 // 
 app.post('/register', async (req,res) =>{
     const {name,email,password} =req.body;
-
+console.log("aaaaaaaaaaaaaaaaaaaaa")
     try {
 
     
@@ -65,6 +66,7 @@ app.post('/register', async (req,res) =>{
 res.json({userDoc});
 }
     catch (e){
+        console.log(e);
         res.status(422).json(e);
     }
 });
